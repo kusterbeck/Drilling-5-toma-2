@@ -1,9 +1,13 @@
 let arrayCharacters = [];
+let indexTwo = 0;
 let isFetchComplete = false;
 let pageIndex = 0;
 let punteroColores = 0;
 let punteroTexto = 0;
 let punteroHideCard = 0;
+let punteroPaginas = 0;
+let characterIndex = 0;
+const colores = ['rojo', 'verde', 'celeste'];
 let ingresarHtml = document.getElementById('main_box');
  
 async function fetchData() {
@@ -24,12 +28,12 @@ async function fetchData() {
     generar.next().value;
 }
 
-async function renderData() {
+function renderData() {
     if (isFetchComplete === true) {
         let text = ['Encontrarás información sobre los personajes más populares de las películas.',
                     'Encontrarás información sobre los personajes secundarios importantes.', 
                     'Encontrarás información sobre otros personajes significativos']
-        let colores = ['rojo', 'verde', 'celeste'];
+        
         let hideCard = ['','hidden'];
         let createCard = document.createElement('div');
         createCard.classList.add('row');
@@ -60,27 +64,39 @@ async function renderData() {
         console.log(ingresarHtml);
         ingresarHtml.appendChild(createCard);
         createCard.innerHTML = cards;
-        renderCards();
+        
     }
 }
 
 function renderCards() {
         const attachCard = document.getElementById(`row_${pageIndex-1}`);
-        let card = document.createElement('div')
-        card.classList.add('card', 'mb-3', 'card_height');  
-        card.innerHTML = `<div class="row g-0">
-                                <div class="col-md-2">
-                                    <div class="circulo verde"></div>
-                                </div>
-                                <div class="col-md-10">
-                                    <div class="card-body">
-                                        <h5 class="card-title">titulo</h5>
-                                        <p class="card-text">Estatura: 150 cm. Peso: 45 kg.</p>
+        console.log(characterIndex)
+        for ( characterIndex ; characterIndex < indexTwo + 5; characterIndex++ ) {
+            let card = document.createElement('div')
+            card.classList.add('card', 'mb-3', 'card_height');  
+            card.innerHTML = `<div class="row g-0">
+                                    <div class="col-md-2">
+                                        <div class="circulo ${colores[punteroColores-1]}"></div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${arrayCharacters[punteroPaginas][characterIndex].name}</h5>
+                                            <p class="card-text">Estatura: ${arrayCharacters[punteroPaginas][characterIndex].height} cm. Peso: ${arrayCharacters[punteroPaginas][characterIndex].mass} kg.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `;
-        attachCard.appendChild(card);
+                            `;
+            attachCard.appendChild(card);
+        }
+        if (characterIndex >= 9) {
+            characterIndex = 0;
+            indexTwo = 0;
+        }
+        indexTwo += characterIndex;
+
+        if (pageIndex%2 == 0) {
+            punteroPaginas++;
+        }
         // let container = document.getElementById(`row_${pageIndex-1}`);
 
 }
@@ -90,19 +106,16 @@ fetchData();
 const generar = cardGenerator();
 
 function* cardGenerator() {
-    
-    console.log(0)
     renderData();
-    
     yield
-    console.log(1)
+    renderCards();
     renderData();
-    
+
     yield 
-    console.log(2)
+    renderCards();
     renderData();
     yield
-    console.log(3)
+
     renderData();
     yield
 }
