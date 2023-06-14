@@ -27,8 +27,8 @@
   max-height: 100px;
 }
 
-.hide {
-  display: none;
+.card {
+  max-width: 340px;
 }
 
 /*# sourceMappingURL=style.css.map */
