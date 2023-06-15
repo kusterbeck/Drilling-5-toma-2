@@ -87,13 +87,16 @@ function renderCards() {
                                 </div>
                             `;
             attachCard.appendChild(card);
+            if (punteroPaginas >= 8 && characterIndex >= 1) {
+                break;
+            }
         }
+
         if (characterIndex >= 9) {
             characterIndex = 0;
             indexTwo = 0;
         }
         indexTwo += characterIndex;
-
         if (pageIndex%2 == 0) {
             punteroPaginas++;
         }
@@ -108,15 +111,13 @@ const generar = cardGenerator();
 function* cardGenerator() {
     renderData();
     yield
-    renderCards();
-    renderData();
-
-    yield 
-    renderCards();
-    renderData();
-    yield
-
-    renderData();
-    yield
+    while (pageIndex < 18) {
+        renderCards();
+        if ( pageIndex < 17) {
+            renderData();
+        }
+        console.log(pageIndex);
+        yield
+   }
 }
 
