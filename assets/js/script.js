@@ -7,23 +7,21 @@ let punteroTexto = 0;
 let punteroHideCard = 0;
 let punteroPaginas = 0;
 let characterIndex = 0;
+let punteroLine = 1;
 const colores = ['rojo', 'verde', 'celeste'];
 let ingresarHtml = document.getElementById('main_box');
  
 async function fetchData() {
     for (let i = 0; i < 9; i++) {
-        let url = `https://swapi.dev/api/people/?page=${i+1}&format=json`;
-        try {
-            let response = await fetch(url);
-            response = await response.json();
-            arrayCharacters.push(response.results);
-            // console.log(arrayCharacters);
-            
-        } catch (error) {
-            console.log(error);
-        }
-        console.log(arrayCharacters)
-        isFetchComplete = true;
+            let url = `https://swapi.dev/api/people/?page=${i+1}&format=json`;
+            try {
+                let response = await fetch(url);
+                response = await response.json();
+                arrayCharacters.push(response.results);
+            } catch (error) {
+                console.log(error);
+            }
+            isFetchComplete = true;
     }
     generar.next().value;
 }
@@ -33,12 +31,11 @@ function renderData() {
         let text = ['Encontrarás información sobre los personajes más populares de las películas.',
                     'Encontrarás información sobre los personajes secundarios importantes.', 
                     'Encontrarás información sobre otros personajes significativos']
-        
         let hideCard = ['','hidden'];
         let createCard = document.createElement('div');
         createCard.classList.add('row');
         createCard.setAttribute('id', `row_${pageIndex}`);
-        let cards = `<div class="card mb-3 ${hideCard[punteroHideCard]}" style="max-width: 340px;" id="bloque_${pageIndex}" onclick="generar.next().value;">
+        let cards = `<div class="card mb-3 ${hideCard[punteroHideCard]} mx-2" style="max-width: 340px;" id="bloque_${pageIndex}" onmouseenter="generar.next().value;">
                         <div class="row g-0">
                             <div class="col-md-2">
                                 <div class="circulo ${colores[punteroColores]}"></div>
@@ -54,26 +51,24 @@ function renderData() {
         pageIndex++;
         punteroColores++;
         punteroHideCard = 1; 
-        if (punteroColores > 2) {
-            punteroColores = 0;
-        } 
+        
         punteroTexto++;
         if (punteroTexto >= 2) {
             punteroTexto = 2;
         }
-        console.log(ingresarHtml);
         ingresarHtml.appendChild(createCard);
         createCard.innerHTML = cards;
-        
     }
 }
 
 function renderCards() {
         const attachCard = document.getElementById(`row_${pageIndex-1}`);
-        console.log(characterIndex)
         for ( characterIndex ; characterIndex < indexTwo + 5; characterIndex++ ) {
+            if (punteroPaginas >= 8 && characterIndex >= 2) {
+                break;
+            }
             let card = document.createElement('div')
-            card.classList.add('card', 'mb-3', 'card_height');  
+            card.classList.add('card', 'mb-3', 'card_height', 'mx-2');  
             card.innerHTML = `<div class="row g-0">
                                     <div class="col-md-2">
                                         <div class="circulo ${colores[punteroColores-1]}"></div>
@@ -86,12 +81,11 @@ function renderCards() {
                                     </div>
                                 </div>
                             `;
-            attachCard.appendChild(card);
-            if (punteroPaginas >= 8 && characterIndex >= 1) {
-                break;
-            }
+            attachCard.appendChild(card);    
         }
-
+        if (punteroColores > 2) {
+            punteroColores = 0;
+        } 
         if (characterIndex >= 9) {
             characterIndex = 0;
             indexTwo = 0;
@@ -100,8 +94,25 @@ function renderCards() {
         if (pageIndex%2 == 0) {
             punteroPaginas++;
         }
-        // let container = document.getElementById(`row_${pageIndex-1}`);
+}
 
+function renderLine() {
+    let cajaLine = document.getElementById('aside');
+    let line = document.createElement('div');
+    let lineCircle = document.createElement('span');
+    lineCircle.classList.add('pacman');
+    line.classList.add('text-center', 'border_right');
+    if (punteroLine >= 80) {
+        line.innerHTML = `<p class="texto">${punteroLine} - ${punteroLine + 1}</p>`;
+        cajaLine.appendChild(line);
+        line.appendChild(lineCircle);
+        punteroLine = punteroLine + 2
+    } else {
+        line.innerHTML = `<p class="texto">${punteroLine} - ${punteroLine + 4}</p>`;
+        cajaLine.appendChild(line);
+        line.appendChild(lineCircle);
+        punteroLine = punteroLine + 5;
+    }
 }
 
 
@@ -110,13 +121,15 @@ const generar = cardGenerator();
 
 function* cardGenerator() {
     renderData();
+    renderLine();
     yield
     while (pageIndex < 18) {
         renderCards();
         if ( pageIndex < 17) {
+            document.getElementById(`bloque_${pageIndex-1}`).removeAttribute('onmouseenter');
+            renderLine();
             renderData();
         }
-        console.log(pageIndex);
         yield
    }
 }
