@@ -31,11 +31,10 @@ function renderData() {
         let text = ['Encontrarás información sobre los personajes más populares de las películas.',
                     'Encontrarás información sobre los personajes secundarios importantes.', 
                     'Encontrarás información sobre otros personajes significativos']
-        let hideCard = ['','hidden'];
         let createCard = document.createElement('div');
         createCard.classList.add('row');
         createCard.setAttribute('id', `row_${pageIndex}`);
-        let cards = `<div class="card mb-3 ${hideCard[punteroHideCard]} mx-2" style="max-width: 340px;" id="bloque_${pageIndex}" onmouseenter="generar.next().value;">
+        let cards = `<div class="card mb-3 mx-2" style="max-width: 340px;" id="bloque_${pageIndex}" onmouseenter="generar.next().value;">
                         <div class="row g-0">
                             <div class="col-md-2">
                                 <div class="circulo ${colores[punteroColores]}"></div>

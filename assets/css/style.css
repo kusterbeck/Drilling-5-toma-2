@@ -31,6 +31,10 @@
   max-width: 340px;
   box-shadow: 5px 5px gray;
 }
+.card:hover {
+  transition: 500ms;
+  scale: 1.05;
+}
 
 .border_right {
   position: relative;
@@ -49,7 +53,7 @@
 }
 
 .pacman {
-  background-color: rgb(255, 221, 0);
+  background-color: rgb(255, 157, 0);
   border-radius: 50%;
   height: 20px;
   width: 20px;
