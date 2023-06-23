@@ -13,17 +13,25 @@ let ingresarHtml = document.getElementById('main_box');
  
 async function fetchData() {
     for (let i = 0; i < 9; i++) {
-            let url = `https://swapi.dev/api/people/?page=${i+1}&format=json`;
-            try {
-                let response = await fetch(url);
-                response = await response.json();
-                arrayCharacters.push(response.results);
-            } catch (error) {
-                console.log(error);
-            }
-            isFetchComplete = true;
+        let url = `https://swapi.dev/api/people/?page=${i+1}&format=json`;
+        try {
+            let response = await fetch(url);
+            response = await response.json();
+            arrayCharacters.push(response.results);
+        } catch (error) {
+            console.log(error);
+        }
     }
+    isFetchComplete = true;
+    loadingSpinner();
     generar.next().value;
+}
+
+function loadingSpinner() {
+    const spinner = document.getElementById('spinner');
+    if (isFetchComplete === true) {
+        spinner.style.display= 'none';
+    }
 }
 
 function renderData() {
